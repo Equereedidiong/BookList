@@ -60,6 +60,19 @@
             <small class="error-msg" id="authorError"></small>
           </div>
 
+          <div class="form-field">
+            <label for="starRatingPicker">Rating (1 to 5 stars)</label>
+            <div class="star-rating-picker" id="starRatingPicker" role="radiogroup" aria-label="Book rating from 1 to 5">
+              <button type="button" class="star-btn" data-value="1" aria-label="1 star">★</button>
+              <button type="button" class="star-btn" data-value="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-btn" data-value="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-btn" data-value="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-btn" data-value="5" aria-label="5 stars">★</button>
+              <span class="rating-display-text" id="ratingDisplayText">5 / 5 stars</span>
+            </div>
+            <input type="hidden" id="ratingInput" value="5">
+          </div>
+
           <div class="form-field checkbox-field">
             <label class="custom-checkbox" for="readCheckbox">
               <input type="checkbox" id="readCheckbox">

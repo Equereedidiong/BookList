@@ -3,7 +3,8 @@
 A clean, responsive personal reading tracker built using only HTML, CSS, and vanilla JavaScript.
 
 ## Features
-- **Add Books**: Track book title, author, and reading status (Read / Not Read).
+- **Add Books**: Track book title, author, rating (1 to 5 stars), and reading status (Read / Not Read).
+- **Star Rating (1-5)**: Interactive 5-star rating picker with hover and click feedback, displayed neatly on each book card.
 - **Persistent Storage**: Saves all data locally in the browser using `localStorage`.
 - **Edit & Update**: Modify any book's details directly.
 - **Delete with Confirmation**: Safeguard against accidental deletions with a confirmation dialog.
@@ -20,3 +21,4 @@ A clean, responsive personal reading tracker built using only HTML, CSS, and van
 
 ## Getting Started
 Simply open `index.html` in any modern web browser. No installation, server, or build step required!
+

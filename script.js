@@ -22,6 +22,7 @@
       title: 'To Kill a Mockingbird',
       author: 'Harper Lee',
       isRead: true,
+      rating: 5,
       createdAt: Date.now() - 200000
     },
     {
@@ -29,6 +30,7 @@
       title: 'Atomic Habits',
       author: 'James Clear',
       isRead: true,
+      rating: 4,
       createdAt: Date.now() - 100000
     },
     {
@@ -36,6 +38,7 @@
       title: '1984',
       author: 'George Orwell',
       isRead: false,
+      rating: 5,
       createdAt: Date.now()
     }
   ];
@@ -46,6 +49,10 @@
   const bookIdInput = document.getElementById('bookIdInput');
   const titleInput = document.getElementById('titleInput');
   const authorInput = document.getElementById('authorInput');
+  const starRatingPicker = document.getElementById('starRatingPicker');
+  const ratingInput = document.getElementById('ratingInput');
+  const ratingDisplayText = document.getElementById('ratingDisplayText');
+  const starButtons = starRatingPicker.querySelectorAll('.star-btn');
   const readCheckbox = document.getElementById('readCheckbox');
   const submitBtn = document.getElementById('submitBtn');
   const submitBtnText = document.getElementById('submitBtnText');
@@ -80,7 +87,12 @@
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored !== null) {
-        books = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        // Ensure backwards compatibility with records before rating was added
+        books = parsed.map(book => ({
+          ...book,
+          rating: typeof book.rating === 'number' ? book.rating : 5
+        }));
       } else {
         // First visit: initialize with starter books
         books = INITIAL_BOOKS;
@@ -124,6 +136,31 @@
     totalBooksCount.textContent = total;
     readBooksCount.textContent = read;
     unreadBooksCount.textContent = unread;
+  }
+
+  function setFormRating(val) {
+    const rating = Math.max(1, Math.min(5, parseInt(val, 10) || 5));
+    ratingInput.value = rating;
+    ratingDisplayText.textContent = `${rating} / 5 stars`;
+    starButtons.forEach(btn => {
+      const btnVal = parseInt(btn.getAttribute('data-value'), 10);
+      btn.classList.toggle('active', btnVal <= rating);
+    });
+  }
+
+  function renderStars(rating) {
+    const r = Math.max(1, Math.min(5, parseInt(rating, 10) || 5));
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+      const isFilled = i <= r;
+      starsHtml += `<span class="star ${isFilled ? 'filled' : 'empty'}">${isFilled ? '★' : '☆'}</span>`;
+    }
+    return `
+      <div class="star-display" aria-label="${r} out of 5 stars">
+        ${starsHtml}
+        <span class="rating-val">(${r}/5)</span>
+      </div>
+    `;
   }
 
   function renderBooks() {
@@ -173,6 +210,7 @@
           <div class="book-info">
             <h3 class="book-title">${escapeHtml(book.title)}</h3>
             <p class="book-author">by ${escapeHtml(book.author)}</p>
+            <div class="book-rating">${renderStars(book.rating || 5)}</div>
           </div>
           <div class="book-footer">
             <button 
@@ -215,6 +253,7 @@
     formHeading.textContent = 'Add a New Book';
     submitBtnText.textContent = 'Add Book';
     cancelEditBtn.classList.add('hidden');
+    setFormRating(5);
     clearValidationErrors();
     renderBooks();
   }
@@ -232,6 +271,7 @@
     titleInput.value = book.title;
     authorInput.value = book.author;
     readCheckbox.checked = !!book.isRead;
+    setFormRating(book.rating || 5);
 
     formHeading.textContent = 'Edit Book';
     submitBtnText.textContent = 'Save Changes';
@@ -252,6 +292,7 @@
     const title = titleInput.value.trim();
     const author = authorInput.value.trim();
     const isRead = readCheckbox.checked;
+    const rating = Math.max(1, Math.min(5, parseInt(ratingInput.value, 10) || 5));
     const editId = bookIdInput.value;
 
     let hasError = false;
@@ -275,6 +316,7 @@
         books[bookIndex].title = title;
         books[bookIndex].author = author;
         books[bookIndex].isRead = isRead;
+        books[bookIndex].rating = rating;
       }
     } else {
       // Add new book to beginning of list
@@ -283,6 +325,7 @@
         title,
         author,
         isRead,
+        rating,
         createdAt: Date.now()
       };
       books.unshift(newBook);
@@ -409,8 +452,29 @@
     if (authorInput.value.trim()) authorError.textContent = '';
   });
 
+  // Star rating picker event listeners
+  starButtons.forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      const hoverVal = parseInt(btn.getAttribute('data-value'), 10);
+      starButtons.forEach(b => {
+        const bVal = parseInt(b.getAttribute('data-value'), 10);
+        b.classList.toggle('hover', bVal <= hoverVal);
+      });
+    });
+
+    btn.addEventListener('click', () => {
+      const selectedVal = parseInt(btn.getAttribute('data-value'), 10);
+      setFormRating(selectedVal);
+    });
+  });
+
+  starRatingPicker.addEventListener('mouseleave', () => {
+    starButtons.forEach(b => b.classList.remove('hover'));
+  });
+
   // --- Initialization ---
   loadBooks();
+  setFormRating(5);
   renderBooks();
 })();
 

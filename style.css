@@ -196,6 +196,43 @@ input[type="search"]:focus {
   min-height: 1.1rem;
 }
 
+/* Star Rating Picker in Form */
+.star-rating-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.15rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.star-btn:hover,
+.star-btn.hover {
+  color: #f59e0b;
+  transform: scale(1.15);
+}
+
+.star-btn.active {
+  color: #f59e0b;
+}
+
+.rating-display-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 0.5rem;
+}
+
 /* Custom Checkbox */
 .checkbox-field {
   margin-top: 0.5rem;
@@ -408,6 +445,39 @@ input[type="search"]:focus {
   font-size: 0.875rem;
   color: var(--text-muted);
   word-break: break-word;
+}
+
+/* Star Rating Display in Book Card */
+.book-rating {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.15rem;
+}
+
+.star-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5px;
+}
+
+.star {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.star.filled {
+  color: #f59e0b;
+}
+
+.star.empty {
+  color: #cbd5e1;
+}
+
+.rating-val {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 0.35rem;
 }
 
 /* Book Item Actions & Badges */
